@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js Mapbox Demo Application
 
-## Getting Started
+A modern, interactive one-page Next.js application featuring a Mapbox component with static JSON data visualization.
 
-First, run the development server:
+## 🚀 Live Demo
+
+**Deployed on Vercel**: [Coming Soon]
+
+## 📍 Features
+
+- **Interactive Map**: Built with Mapbox GL JS and react-map-gl
+- **Static Data Integration**: JSON-based location data with 5 NYC landmarks
+- **Category-based Visualization**: Color-coded markers for different location types
+- **Interactive UI Elements**:
+  - Clickable markers with detailed popups
+  - Category legend with color indicators
+  - Location list panel for easy navigation
+  - Smooth hover effects and transitions
+- **Modern Tech Stack**: Next.js 15, TypeScript, Tailwind CSS
+
+## 🛠 Technology Stack
+
+- **Framework**: Next.js 15.5.3 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Mapping**: Mapbox GL JS + react-map-gl
+- **Deployment**: Vercel
+- **Package Manager**: npm
+
+## 🏗 Getting Started
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/IQSF-QSI/demo-gqsi.git
+cd demo-gqsi
+
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev          # Start development server with Turbopack
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+```
 
-## Learn More
+## 🚀 Deployment
 
-To learn more about Next.js, take a look at the following resources:
+### Vercel (Recommended)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This application is optimized for Vercel deployment:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Connect Repository**: Import the GitHub repository to Vercel
+2. **Configure Settings**: Vercel will auto-detect Next.js settings
+3. **Deploy**: Automatic deployment on every push to main branch
 
-## Deploy on Vercel
+### Manual Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+# Install Vercel CLI
+npm install -g vercel
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Deploy to Vercel
+vercel --prod
+```
+
+## 📍 Sample Data
+
+The application displays 5 iconic New York City locations:
+
+1. **Central Park** (Park) - Large public park in Manhattan
+2. **Times Square** (Landmark) - Major commercial intersection
+3. **Brooklyn Bridge** (Bridge) - Historic suspension bridge
+4. **Statue of Liberty** (Monument) - Iconic symbol of freedom
+5. **Empire State Building** (Building) - Art Deco skyscraper
+
+## 🎨 Customization
+
+- **Add Locations**: Modify `src/data/locations.json`
+- **Change Colors**: Update the `getCategoryColor` function
+- **Modify Styling**: Edit Tailwind classes in components
+- **Add Features**: Extend the MapboxComponent with additional functionality
+
+## 🗺 Mapbox Configuration
+
+The application uses a demo Mapbox token. For production:
+
+1. Create account at [mapbox.com](https://mapbox.com)
+2. Generate access token
+3. Replace token in `MapboxComponent.tsx`
+4. Use environment variables: `NEXT_PUBLIC_MAPBOX_TOKEN`
+
+## 📱 Browser Support
+
+- Chrome/Chromium (recommended)
+- Firefox
+- Safari
+- Edge
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🔗 Links
+
+- **Repository**: https://github.com/IQSF-QSI/demo-gqsi
+- **Live Demo**: [Vercel Deployment URL]
+- **Documentation**: [Project Wiki]
