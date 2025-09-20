@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Central Park",
+    "description": "A large public park in Manhattan, New York City",
+    "latitude": 40.7829,
+    "longitude": -73.9654,
+    "category": "park"
+  },
+  {
+    "id": 2,
+    "name": "Times Square",
+    "description": "Major commercial intersection and tourist destination",
+    "latitude": 40.7580,
+    "longitude": -73.9855,
+    "category": "landmark"
+  },
+  {
+    "id": 3,
+    "name": "Brooklyn Bridge",
+    "description": "Historic suspension bridge connecting Manhattan and Brooklyn",
+    "latitude": 40.7061,
+    "longitude": -73.9969,
+    "category": "bridge"
+  },
+  {
+    "id": 4,
+    "name": "Statue of Liberty",
+    "description": "Iconic symbol of freedom and democracy",
+    "latitude": 40.6892,
+    "longitude": -74.0445,
+    "category": "monument"
+  },
+  {
+    "id": 5,
+    "name": "Empire State Building",
+    "description": "Art Deco skyscraper in Midtown Manhattan",
+    "latitude": 40.7484,
+    "longitude": -73.9857,
+    "category": "building"
+  }
+]
