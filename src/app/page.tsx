@@ -2,7 +2,8 @@
 import { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 
-mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || 'pk.eyJ1IjoibWFudXMtZGVtbyIsImEiOiJjbTFqZjNqZjcwMGZnMmxzZGZqbGJhZGZuIn0.VGF3VGF3VGF3VGF3VGF3VGF3';
+// Set the access token
+mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
 
 type Intersectional = {
   transgender: number;
@@ -26,135 +27,164 @@ type Row = {
 };
 
 export default function Page() {
-  const mapRef = useRef<mapboxgl.Map|null>(null);
-  const elRef = useRef<HTMLDivElement|null>(null);
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const map = useRef<mapboxgl.Map | null>(null);
   const [mode, setMode] = useState<'traveler'|'policy'|'intersectional'>('traveler');
   const [intersectionalCategory, setIntersectionalCategory] = useState<keyof Intersectional>('transgender');
   const [data, setData] = useState<Row[]>([]);
 
-  useEffect(() => { fetch('/gqsi.json').then(r=>r.json()).then(setData); }, []);
-
+  // Load data
   useEffect(() => {
-    if (!elRef.current || !mapboxgl.accessToken) return;
-    if (mapRef.current) return; // create once
+    fetch('/gqsi.json')
+      .then(response => response.json())
+      .then(data => setData(data))
+      .catch(error => console.error('Error loading data:', error));
+  }, []);
 
-    const map = new mapboxgl.Map({
-      container: elRef.current,
+  // Initialize map
+  useEffect(() => {
+    if (map.current) return; // initialize map only once
+    if (!mapContainer.current) return;
+
+    map.current = new mapboxgl.Map({
+      container: mapContainer.current,
       style: 'mapbox://styles/mapbox/dark-v11',
       center: [10, 20],
       zoom: 1.3
     });
-    map.addControl(new mapboxgl.NavigationControl({ visualizePitch:true }), 'top-right');
-    map.on('load', () => addLayer(map, data, mode, intersectionalCategory));
 
-    mapRef.current = map;
-    return () => map.remove();
-  }, [elRef.current]);
+    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-  // Update data or mode
+    return () => {
+      if (map.current) {
+        map.current.remove();
+        map.current = null;
+      }
+    };
+  }, []);
+
+  // Update map when data or mode changes
   useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
-    updateLayer(map, data, mode, intersectionalCategory);
+    if (!map.current || !data.length) return;
+
+    map.current.on('load', () => {
+      updateMapData();
+    });
+
+    if (map.current.isStyleLoaded()) {
+      updateMapData();
+    }
   }, [data, mode, intersectionalCategory]);
 
-  function colorExpr(field:string){
-    return ['interpolate',['linear'],['get',field],
-      0,'#ff3b3b', 50,'#ffd700', 75,'#00b7ff', 90,'#6e40c9'
-    ] as any;
-  }
+  const updateMapData = () => {
+    if (!map.current || !data.length) return;
 
-  function addLayer(map: mapboxgl.Map, rows: Row[], mode: 'traveler'|'policy'|'intersectional', intersectionalCat: keyof Intersectional){
-    const features = rows.map(r=>({
-      type:'Feature',
-      properties: { 
-        name:r.name, 
-        score_traveler:r.score_traveler, 
-        score_policy:r.score_policy,
-        ...Object.fromEntries(Object.entries(r.intersectional).map(([k,v]) => [`intersectional_${k}`, v]))
-      },
-      geometry: { type:'Point', coordinates:[r.lng, r.lat] }
-    }));
-    const geojson = { type:'FeatureCollection', features } as any;
-    if (!map.getSource('gqsi')) map.addSource('gqsi',{ type:'geojson', data: geojson });
-
-    const scoreField = mode === 'intersectional' ? `intersectional_${intersectionalCat}` : 
+    const scoreField = mode === 'intersectional' ? intersectionalCategory : 
                       mode === 'traveler' ? 'score_traveler' : 'score_policy';
 
-    if (!map.getLayer('gqsi-circles')) {
-      map.addLayer({
-        id:'gqsi-circles',
-        type:'circle',
-        source:'gqsi',
-        paint: {
-          'circle-radius': ['interpolate',['linear'],['coalesce',['get', scoreField],0], 0,4, 100,12],
-          'circle-color': colorExpr(scoreField),
-          'circle-opacity': 0.85,
-          'circle-stroke-color':'#ffffff',
-          'circle-stroke-width':1
-        }
-      });
+    // Remove existing layers and sources
+    if (map.current.getLayer('countries')) {
+      map.current.removeLayer('countries');
+    }
+    if (map.current.getSource('countries')) {
+      map.current.removeSource('countries');
     }
 
-    map.on('click','gqsi-circles',(e)=>{
-      const f = e.features?.[0] as any; if (!f) return;
-      const p = f.properties;
-      const coords = f.geometry.coordinates.slice();
-      const sTrav = p.score_traveler, sPol = p.score_policy;
+    // Create GeoJSON features
+    const features = data.map(country => ({
+      type: 'Feature' as const,
+      properties: {
+        name: country.name,
+        score_traveler: country.score_traveler,
+        score_policy: country.score_policy,
+        current_score: mode === 'intersectional' ? country.intersectional[intersectionalCategory] :
+                      mode === 'traveler' ? country.score_traveler : country.score_policy,
+        ...country.intersectional
+      },
+      geometry: {
+        type: 'Point' as const,
+        coordinates: [country.lng, country.lat]
+      }
+    }));
+
+    // Add source
+    map.current.addSource('countries', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: features
+      }
+    });
+
+    // Add layer
+    map.current.addLayer({
+      id: 'countries',
+      type: 'circle',
+      source: 'countries',
+      paint: {
+        'circle-radius': [
+          'interpolate',
+          ['linear'],
+          ['get', 'current_score'],
+          0, 4,
+          100, 12
+        ],
+        'circle-color': [
+          'interpolate',
+          ['linear'],
+          ['get', 'current_score'],
+          0, '#ff3b3b',
+          50, '#ffd700',
+          75, '#00b7ff',
+          90, '#6e40c9'
+        ],
+        'circle-opacity': 0.85,
+        'circle-stroke-color': '#ffffff',
+        'circle-stroke-width': 1
+      }
+    });
+
+    // Add click handler
+    map.current.on('click', 'countries', (e) => {
+      if (!e.features || !e.features[0]) return;
       
-      const intersectionalScores = Object.keys(rows[0].intersectional).map(key => 
+      const feature = e.features[0];
+      const props = feature.properties;
+      const coordinates = (feature.geometry as any).coordinates.slice();
+
+      const intersectionalScores = Object.keys(data[0].intersectional).map(key => 
         `<div style="font-size:12px;display:flex;justify-content:space-between;margin:2px 0">
           <span>${key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</span>
-          <b>${p[`intersectional_${key}`]}</b>
+          <b>${props[key]}</b>
         </div>`
       ).join('');
 
-      new mapboxgl.Popup({ offset:12 }).setLngLat(coords).setHTML(`
-        <div style="font-family:Inter,system-ui,sans-serif;max-width:250px">
-          <div style="font-weight:700;margin-bottom:8px;font-size:14px">${p.name}</div>
-          <div style="font-size:13px;margin-bottom:4px">Traveler score: <b>${sTrav}</b></div>
-          <div style="font-size:13px;margin-bottom:8px">Policy score: <b>${sPol}</b></div>
-          <div style="border-top:1px solid #eee;padding-top:8px;margin-top:8px">
-            <div style="font-weight:600;font-size:12px;margin-bottom:4px;color:#666">Intersectional Safety:</div>
-            ${intersectionalScores}
+      new mapboxgl.Popup({ offset: 15 })
+        .setLngLat(coordinates)
+        .setHTML(`
+          <div style="font-family:Inter,system-ui,sans-serif;max-width:250px">
+            <div style="font-weight:700;margin-bottom:8px;font-size:14px">${props.name}</div>
+            <div style="font-size:13px;margin-bottom:4px">Traveler score: <b>${props.score_traveler}</b></div>
+            <div style="font-size:13px;margin-bottom:8px">Policy score: <b>${props.score_policy}</b></div>
+            <div style="border-top:1px solid #eee;padding-top:8px;margin-top:8px">
+              <div style="font-weight:600;font-size:12px;margin-bottom:4px;color:#666">Intersectional Safety:</div>
+              ${intersectionalScores}
+            </div>
+            <div style="opacity:.7;font-size:11px;margin-top:8px;font-style:italic">Demo data for illustration.</div>
           </div>
-          <div style="opacity:.7;font-size:11px;margin-top:8px;font-style:italic">Demo data for illustration.</div>
-        </div>
-      `).addTo(map);
+        `)
+        .addTo(map.current!);
     });
 
-    map.on('mouseenter','gqsi-circles',()=>{ map.getCanvas().style.cursor='pointer'; });
-    map.on('mouseleave','gqsi-circles',()=>{ map.getCanvas().style.cursor=''; });
-  }
+    // Change cursor on hover
+    map.current.on('mouseenter', 'countries', () => {
+      if (map.current) map.current.getCanvas().style.cursor = 'pointer';
+    });
 
-  function updateLayer(map: mapboxgl.Map, rows: Row[], mode: 'traveler'|'policy'|'intersectional', intersectionalCat: keyof Intersectional){
-    const src = map.getSource('gqsi') as mapboxgl.GeoJSONSource;
-    if (src) {
-      const features = rows.map(r=>({
-        type:'Feature',
-        properties: { 
-          name:r.name, 
-          score_traveler:r.score_traveler, 
-          score_policy:r.score_policy,
-          ...Object.fromEntries(Object.entries(r.intersectional).map(([k,v]) => [`intersectional_${k}`, v]))
-        },
-        geometry: { type:'Point', coordinates:[r.lng, r.lat] }
-      }));
-      src.setData({ type:'FeatureCollection', features } as any);
-    }
-
-    const scoreField = mode === 'intersectional' ? `intersectional_${intersectionalCat}` : 
-                      mode === 'traveler' ? 'score_traveler' : 'score_policy';
-
-    if (map.getLayer('gqsi-circles')) {
-      map.setPaintProperty('gqsi-circles','circle-radius',
-        ['interpolate',['linear'],['coalesce',['get', scoreField],0],0,4,100,12] as any
-      );
-      map.setPaintProperty('gqsi-circles','circle-color',
-        colorExpr(scoreField) as any
-      );
-    }
-  }
+    map.current.on('mouseleave', 'countries', () => {
+      if (map.current) map.current.getCanvas().style.cursor = '';
+    });
+  };
 
   const intersectionalOptions: {key: keyof Intersectional, label: string}[] = [
     {key: 'transgender', label: 'Transgender'},
@@ -235,7 +265,7 @@ export default function Page() {
           </div>
           <div>
             <div className="mapWrap">
-              <div id="map" ref={elRef} className="map" />
+              <div ref={mapContainer} className="map" />
             </div>
           </div>
         </section>
