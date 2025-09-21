@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 
 // Set the access token
-mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || 'sk.eyJ1IjoicXVlZXJhZ2VudDEiLCJhIjoiY21mdDF3ZXk0MGMwbTJxcHUzazcyZ245NyJ9.MczWzTt8Fr77MuY2Brh1-Q';
 
 type Intersectional = {
   transgender: number;
