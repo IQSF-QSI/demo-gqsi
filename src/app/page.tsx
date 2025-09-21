@@ -213,7 +213,7 @@ export default function Page() {
           <a className="brand" href="#"><span>Vector for Good × IQSF</span></a>
           <span className="badge">GQSI Demo (static)</span>
           <div style={{marginLeft: 'auto'}}>
-            <a className="button" href="mailto:invest@vectorforgood.org">Request Investor Deck</a>
+            <a className="button" href="https://cal.com/levi-hankins-iqfs/iqsf-investor-pitch" target="_blank" rel="noopener noreferrer">Schedule Investor Meeting</a>
           </div>
         </div>
       </header>
