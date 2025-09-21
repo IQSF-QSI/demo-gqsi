@@ -1,4 +1,5 @@
 import './styles.css';
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata = {
   title: 'GQSI Demo — Vector for Good × IQSF',
@@ -11,7 +12,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet" />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
