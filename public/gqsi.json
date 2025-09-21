@@ -1,12 +1,182 @@
 [
-  { "id":"US", "name":"United States", "score_traveler":72, "score_policy":68, "lng":-98.5795, "lat":39.8283 },
-  { "id":"CA", "name":"Canada", "score_traveler":90, "score_policy":88, "lng":-106.3468, "lat":56.1304 },
-  { "id":"DE", "name":"Germany", "score_traveler":86, "score_policy":84, "lng":10.4515, "lat":51.1657 },
-  { "id":"EE", "name":"Estonia", "score_traveler":79, "score_policy":82, "lng":25.0136, "lat":58.5953 },
-  { "id":"GB", "name":"United Kingdom", "score_traveler":83, "score_policy":80, "lng":-3.436, "lat":55.3781 },
-  { "id":"ES", "name":"Spain", "score_traveler":88, "score_policy":85, "lng":-3.7492, "lat":40.4637 },
-  { "id":"BR", "name":"Brazil", "score_traveler":62, "score_policy":58, "lng":-51.9253, "lat":-14.235 },
-  { "id":"ZA", "name":"South Africa", "score_traveler":70, "score_policy":74, "lng":22.9375, "lat":-30.5595 },
-  { "id":"AU", "name":"Australia", "score_traveler":89, "score_policy":86, "lng":133.7751, "lat":-25.2744 },
-  { "id":"JP", "name":"Japan", "score_traveler":68, "score_policy":60, "lng":138.2529, "lat":36.2048 }
+  { 
+    "id":"US", 
+    "name":"United States", 
+    "score_traveler":72, 
+    "score_policy":68, 
+    "lng":-98.5795, 
+    "lat":39.8283,
+    "intersectional": {
+      "transgender": 45,
+      "racial_minorities": 58,
+      "religious_minorities": 62,
+      "disabled": 55,
+      "youth": 48,
+      "elderly": 70,
+      "rural": 35,
+      "low_income": 42
+    }
+  },
+  { 
+    "id":"CA", 
+    "name":"Canada", 
+    "score_traveler":90, 
+    "score_policy":88, 
+    "lng":-106.3468, 
+    "lat":56.1304,
+    "intersectional": {
+      "transgender": 82,
+      "racial_minorities": 85,
+      "religious_minorities": 87,
+      "disabled": 83,
+      "youth": 88,
+      "elderly": 89,
+      "rural": 78,
+      "low_income": 80
+    }
+  },
+  { 
+    "id":"DE", 
+    "name":"Germany", 
+    "score_traveler":86, 
+    "score_policy":84, 
+    "lng":10.4515, 
+    "lat":51.1657,
+    "intersectional": {
+      "transgender": 78,
+      "racial_minorities": 72,
+      "religious_minorities": 80,
+      "disabled": 81,
+      "youth": 85,
+      "elderly": 84,
+      "rural": 75,
+      "low_income": 76
+    }
+  },
+  { 
+    "id":"EE", 
+    "name":"Estonia", 
+    "score_traveler":79, 
+    "score_policy":82, 
+    "lng":25.0136, 
+    "lat":58.5953,
+    "intersectional": {
+      "transgender": 65,
+      "racial_minorities": 70,
+      "religious_minorities": 75,
+      "disabled": 72,
+      "youth": 80,
+      "elderly": 78,
+      "rural": 68,
+      "low_income": 71
+    }
+  },
+  { 
+    "id":"GB", 
+    "name":"United Kingdom", 
+    "score_traveler":83, 
+    "score_policy":80, 
+    "lng":-3.436, 
+    "lat":55.3781,
+    "intersectional": {
+      "transgender": 68,
+      "racial_minorities": 75,
+      "religious_minorities": 78,
+      "disabled": 79,
+      "youth": 82,
+      "elderly": 81,
+      "rural": 72,
+      "low_income": 74
+    }
+  },
+  { 
+    "id":"ES", 
+    "name":"Spain", 
+    "score_traveler":88, 
+    "score_policy":85, 
+    "lng":-3.7492, 
+    "lat":40.4637,
+    "intersectional": {
+      "transgender": 80,
+      "racial_minorities": 82,
+      "religious_minorities": 84,
+      "disabled": 83,
+      "youth": 87,
+      "elderly": 86,
+      "rural": 79,
+      "low_income": 81
+    }
+  },
+  { 
+    "id":"BR", 
+    "name":"Brazil", 
+    "score_traveler":62, 
+    "score_policy":58, 
+    "lng":-51.9253, 
+    "lat":-14.235,
+    "intersectional": {
+      "transgender": 25,
+      "racial_minorities": 45,
+      "religious_minorities": 52,
+      "disabled": 48,
+      "youth": 55,
+      "elderly": 60,
+      "rural": 35,
+      "low_income": 40
+    }
+  },
+  { 
+    "id":"ZA", 
+    "name":"South Africa", 
+    "score_traveler":70, 
+    "score_policy":74, 
+    "lng":22.9375, 
+    "lat":-30.5595,
+    "intersectional": {
+      "transgender": 45,
+      "racial_minorities": 68,
+      "religious_minorities": 62,
+      "disabled": 58,
+      "youth": 65,
+      "elderly": 72,
+      "rural": 50,
+      "low_income": 55
+    }
+  },
+  { 
+    "id":"AU", 
+    "name":"Australia", 
+    "score_traveler":89, 
+    "score_policy":86, 
+    "lng":133.7751, 
+    "lat":-25.2744,
+    "intersectional": {
+      "transgender": 78,
+      "racial_minorities": 82,
+      "religious_minorities": 85,
+      "disabled": 84,
+      "youth": 88,
+      "elderly": 87,
+      "rural": 75,
+      "low_income": 79
+    }
+  },
+  { 
+    "id":"JP", 
+    "name":"Japan", 
+    "score_traveler":68, 
+    "score_policy":60, 
+    "lng":138.2529, 
+    "lat":36.2048,
+    "intersectional": {
+      "transgender": 35,
+      "racial_minorities": 58,
+      "religious_minorities": 62,
+      "disabled": 55,
+      "youth": 65,
+      "elderly": 70,
+      "rural": 60,
+      "low_income": 58
+    }
+  }
 ]
