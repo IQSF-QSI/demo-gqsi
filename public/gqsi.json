@@ -1,0 +1,12 @@
+[
+  { "id":"US", "name":"United States", "score_traveler":72, "score_policy":68, "lng":-98.5795, "lat":39.8283 },
+  { "id":"CA", "name":"Canada", "score_traveler":90, "score_policy":88, "lng":-106.3468, "lat":56.1304 },
+  { "id":"DE", "name":"Germany", "score_traveler":86, "score_policy":84, "lng":10.4515, "lat":51.1657 },
+  { "id":"EE", "name":"Estonia", "score_traveler":79, "score_policy":82, "lng":25.0136, "lat":58.5953 },
+  { "id":"GB", "name":"United Kingdom", "score_traveler":83, "score_policy":80, "lng":-3.436, "lat":55.3781 },
+  { "id":"ES", "name":"Spain", "score_traveler":88, "score_policy":85, "lng":-3.7492, "lat":40.4637 },
+  { "id":"BR", "name":"Brazil", "score_traveler":62, "score_policy":58, "lng":-51.9253, "lat":-14.235 },
+  { "id":"ZA", "name":"South Africa", "score_traveler":70, "score_policy":74, "lng":22.9375, "lat":-30.5595 },
+  { "id":"AU", "name":"Australia", "score_traveler":89, "score_policy":86, "lng":133.7751, "lat":-25.2744 },
+  { "id":"JP", "name":"Japan", "score_traveler":68, "score_policy":60, "lng":138.2529, "lat":36.2048 }
+]
