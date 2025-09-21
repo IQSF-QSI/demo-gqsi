@@ -209,7 +209,7 @@ export default function Page() {
     <>
       <header className="header">
         <div className="wrap">
-          <img src="/logo.svg" className="logo" alt="Vector for Good logo"/>
+          <img src="/vector-for-good-logo.png" className="logo" alt="Vector for Good logo"/>
           <a className="brand" href="#"><span>Vector for Good × IQSF</span></a>
           <span className="badge">GQSI Demo (static)</span>
           <div style={{marginLeft: 'auto'}}>
