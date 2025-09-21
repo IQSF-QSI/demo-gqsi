@@ -1,5 +1,5 @@
 import './styles.css';
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata = {
   title: 'GQSI Demo — Vector for Good × IQSF',
