@@ -116,7 +116,7 @@ export default function Page() {
       }
     });
 
-    // Add layer
+    // Add marker layer with enhanced traffic light colors
     map.current.addLayer({
       id: 'countries',
       type: 'circle',
@@ -126,21 +126,20 @@ export default function Page() {
           'interpolate',
           ['linear'],
           ['get', 'current_score'],
-          0, 4,
-          100, 12
+          0, 12,    // Larger minimum size for heat map effect
+          100, 25   // Larger maximum size
         ],
         'circle-color': [
-          'interpolate',
-          ['linear'],
+          'step',
           ['get', 'current_score'],
-          0, '#ff3b3b',
-          50, '#ffd700',
-          75, '#00b7ff',
-          90, '#6e40c9'
+          '#DC2626',    // Red (0-39) - Dangerous
+          40, '#F59E0B', // Orange (40-69) - Caution  
+          70, '#16A34A'  // Green (70-100) - Safe
         ],
-        'circle-opacity': 0.85,
+        'circle-opacity': 0.8,
         'circle-stroke-color': '#ffffff',
-        'circle-stroke-width': 1
+        'circle-stroke-width': 3,
+        'circle-stroke-opacity': 1
       }
     });
 
@@ -194,7 +193,7 @@ export default function Page() {
     });
   };
 
-  const intersectionalOptions: {key: keyof Intersectional, label: string}[] = [
+  const intersectionalOptions = [
     {key: 'transgender', label: 'Transgender'},
     {key: 'racial_minorities', label: 'Racial Minorities'},
     {key: 'religious_minorities', label: 'Religious Minorities'},
@@ -204,6 +203,47 @@ export default function Page() {
     {key: 'rural', label: 'Rural Areas'},
     {key: 'low_income', label: 'Low Income'}
   ];
+
+  // Traffic light color function
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return '#16A34A'; // Green
+    if (score >= 70) return '#65A30D'; // Light Green
+    if (score >= 60) return '#CA8A04'; // Yellow
+    if (score >= 40) return '#F59E0B'; // Orange
+    if (score >= 30) return '#EA580C'; // Dark Orange
+    return '#DC2626'; // Red
+  };
+
+  // Generate country colors for heat map
+  const getCountryColors = () => {
+    const colors: { [key: string]: string } = {};
+    
+    // Map country names to ISO codes and colors
+    const countryMapping: { [key: string]: string } = {
+      'Canada': 'CAN',
+      'Australia': 'AUS', 
+      'Spain': 'ESP',
+      'Germany': 'DEU',
+      'United Kingdom': 'GBR',
+      'Estonia': 'EST',
+      'United States': 'USA',
+      'South Africa': 'ZAF',
+      'Japan': 'JPN',
+      'Brazil': 'BRA'
+    };
+
+    data.forEach(country => {
+      const isoCode = countryMapping[country.name];
+      if (isoCode) {
+        const score = mode === 'traveler' ? country.score_traveler : 
+                     mode === 'policy' ? country.score_policy :
+                     country.intersectional[intersectionalCategory];
+        colors[isoCode] = getScoreColor(score);
+      }
+    });
+
+    return colors;
+  };
 
   return (
     <>
@@ -259,10 +299,9 @@ export default function Page() {
             )}
 
             <div className="legend">
-              <div className="dot" style={{background:'#ff3b3b'}}></div><span>Low</span>
-              <div className="dot" style={{background:'#ffd700'}}></div><span>Medium</span>
-              <div className="dot" style={{background:'#00b7ff'}}></div><span>High</span>
-              <div className="dot" style={{background:'#6e40c9'}}></div><span>Very High</span>
+              <span className="dot" style={{backgroundColor: '#DC2626'}}></span> Low (0-39)
+              <span className="dot" style={{backgroundColor: '#F59E0B'}}></span> Medium (40-69)
+              <span className="dot" style={{backgroundColor: '#16A34A'}}></span> High (70-100)
             </div>
             <p className="notice">
               {mode === 'intersectional' 
