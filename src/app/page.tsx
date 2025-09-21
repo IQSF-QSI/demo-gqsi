@@ -146,31 +146,39 @@ export default function Page() {
 
     // Add click handler
     map.current.on('click', 'countries', (e) => {
-      if (!e.features || !e.features[0]) return;
+      if (!e.features || !e.features[0] || !data.length) return;
       
       const feature = e.features[0];
       const props = feature.properties;
       const coordinates = (feature.geometry as any).coordinates.slice();
 
-      const intersectionalScores = Object.keys(data[0].intersectional).map(key => 
-        `<div style="font-size:12px;display:flex;justify-content:space-between;margin:2px 0;color:#ffffff">
-          <span style="color:#ffffff">${key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</span>
-          <b style="color:#ffffff">${props[`intersectional_${key}`]}</b>
-        </div>`
-      ).join('');
+      // Find the country data to get intersectional scores
+      const countryData = data.find(country => country.name === props.name);
+      
+      let intersectionalScores = '';
+      if (countryData && countryData.intersectional) {
+        intersectionalScores = Object.entries(countryData.intersectional).map(([key, value]) => 
+          `<div style="font-size:12px;display:flex;justify-content:space-between;margin:2px 0;color:#ffffff">
+            <span style="color:#ffffff">${key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</span>
+            <b style="color:#ffffff">${value}</b>
+          </div>`
+        ).join('');
+      } else {
+        intersectionalScores = '<div style="color:#cccccc;font-size:12px">No intersectional data available</div>';
+      }
 
       new mapboxgl.Popup({ offset: 15 })
         .setLngLat(coordinates)
         .setHTML(`
-          <div style="font-family:Inter,system-ui,sans-serif;max-width:250px;background:#1a1a1d;color:#ffffff;padding:16px;border-radius:8px;border:1px solid rgba(255,255,255,0.2)">
+          <div style="font-family:Inter,system-ui,sans-serif;max-width:280px;background:#1a1a1d;color:#ffffff;padding:16px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);box-shadow:0 4px 12px rgba(0,0,0,0.3)">
             <div style="font-weight:700;margin-bottom:8px;font-size:14px;color:#ffffff">${props.name}</div>
-            <div style="font-size:13px;margin-bottom:4px;color:#ffffff">Traveler score: <b>${props.score_traveler}</b></div>
-            <div style="font-size:13px;margin-bottom:8px;color:#ffffff">Policy score: <b>${props.score_policy}</b></div>
+            <div style="font-size:13px;margin-bottom:4px;color:#ffffff">Traveler score: <b style="color:#00b7ff">${props.score_traveler}</b></div>
+            <div style="font-size:13px;margin-bottom:8px;color:#ffffff">Policy score: <b style="color:#6e40c9">${props.score_policy}</b></div>
             <div style="border-top:1px solid rgba(255,255,255,0.2);padding-top:8px;margin-top:8px">
-              <div style="font-weight:600;font-size:12px;margin-bottom:4px;color:#cccccc">Intersectional Safety:</div>
+              <div style="font-weight:600;font-size:12px;margin-bottom:6px;color:#ffd700">Intersectional Safety Scores:</div>
               ${intersectionalScores}
             </div>
-            <div style="opacity:.7;font-size:11px;margin-top:8px;font-style:italic;color:#cccccc">Demo data for illustration.</div>
+            <div style="opacity:.7;font-size:11px;margin-top:8px;font-style:italic;color:#cccccc">Demo data for illustration purposes</div>
           </div>
         `)
         .addTo(map.current!);
