@@ -153,24 +153,24 @@ export default function Page() {
       const coordinates = (feature.geometry as any).coordinates.slice();
 
       const intersectionalScores = Object.keys(data[0].intersectional).map(key => 
-        `<div style="font-size:12px;display:flex;justify-content:space-between;margin:2px 0">
-          <span>${key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</span>
-          <b>${props[key]}</b>
+        `<div style="font-size:12px;display:flex;justify-content:space-between;margin:2px 0;color:#ffffff">
+          <span style="color:#ffffff">${key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</span>
+          <b style="color:#ffffff">${props[`intersectional_${key}`]}</b>
         </div>`
       ).join('');
 
       new mapboxgl.Popup({ offset: 15 })
         .setLngLat(coordinates)
         .setHTML(`
-          <div style="font-family:Inter,system-ui,sans-serif;max-width:250px">
-            <div style="font-weight:700;margin-bottom:8px;font-size:14px">${props.name}</div>
-            <div style="font-size:13px;margin-bottom:4px">Traveler score: <b>${props.score_traveler}</b></div>
-            <div style="font-size:13px;margin-bottom:8px">Policy score: <b>${props.score_policy}</b></div>
-            <div style="border-top:1px solid #eee;padding-top:8px;margin-top:8px">
-              <div style="font-weight:600;font-size:12px;margin-bottom:4px;color:#666">Intersectional Safety:</div>
+          <div style="font-family:Inter,system-ui,sans-serif;max-width:250px;background:#1a1a1d;color:#ffffff;padding:16px;border-radius:8px;border:1px solid rgba(255,255,255,0.2)">
+            <div style="font-weight:700;margin-bottom:8px;font-size:14px;color:#ffffff">${props.name}</div>
+            <div style="font-size:13px;margin-bottom:4px;color:#ffffff">Traveler score: <b>${props.score_traveler}</b></div>
+            <div style="font-size:13px;margin-bottom:8px;color:#ffffff">Policy score: <b>${props.score_policy}</b></div>
+            <div style="border-top:1px solid rgba(255,255,255,0.2);padding-top:8px;margin-top:8px">
+              <div style="font-weight:600;font-size:12px;margin-bottom:4px;color:#cccccc">Intersectional Safety:</div>
               ${intersectionalScores}
             </div>
-            <div style="opacity:.7;font-size:11px;margin-top:8px;font-style:italic">Demo data for illustration.</div>
+            <div style="opacity:.7;font-size:11px;margin-top:8px;font-style:italic;color:#cccccc">Demo data for illustration.</div>
           </div>
         `)
         .addTo(map.current!);
